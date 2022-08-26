@@ -12,8 +12,8 @@ export const FilterContainer = styled.div`
   column-gap: 2em;
   align-items: center;
   flex-wrap: nowrap;
-  height: 12%;
-  padding: 2em;
+  height: calc(12% - 2em);
+  padding: 2em 2em 0 2em;
 `
 
 export const ResetFiltersButton = styled.button`

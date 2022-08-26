@@ -1,23 +1,24 @@
 import React from 'react'
+import { DateTime, Interval } from 'luxon'
 
 interface WeekPickerProps {
-    initialValue: Date
-    selectedDate: Date
-    onChange: (date: Date) => void
+    initialValue: DateTime
+    selectedDate: DateTime
+    onChange: (date: DateTime) => void
 }
 
 interface WeekPickerDayProps {
-    value: Date
-    selectedDate: Date
+    day: DateTime
+    selectedDate: DateTime
     currentMonth: number
     onClick: (event: React.MouseEvent<HTMLDivElement>) => void
 }
 
 interface WeekPickerWeekProps {
-    value: Array<Date>
-    selectedDate: Date
+    weekDays: Interval
+    selectedDate: DateTime
     currentMonth: number
-    onDayClick: (date: Date) => ((event: React.MouseEvent<HTMLDivElement>) => void)
+    onDayClick: (date: DateTime) => ((event: React.MouseEvent<HTMLDivElement>) => void)
 }
 
 export type { WeekPickerProps, WeekPickerDayProps, WeekPickerWeekProps }

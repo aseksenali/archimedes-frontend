@@ -1,6 +1,6 @@
 import { MutableRefObject } from 'react'
-import { MedicSchedule } from '../../interfaces/MedicSchedule'
 import { MedicData } from '../../interfaces/MedicData'
+import { DateTime } from 'luxon'
 
 type TextFilter = {
     type: 'text'
@@ -22,28 +22,26 @@ type TextFilter = {
 
 type WeekFilter = {
     type: 'week'
-    initialValue: Date
-    selectedDate: Date
-    onChange: (date: Date) => void
+    initialValue: DateTime
+    selectedDate: DateTime
+    onChange: (date: DateTime) => void
 }
 
 export type Filter = { id: string } & (TextFilter | WeekFilter)
 
 export type FiltersList = {
     branchName: Array<string>
-    workType: Array<string>
     specialtyName: Array<string>
     medicName: Array<string>
 }
 
 export type ScheduleOutletContext = {
-    date: Date,
+    date: DateTime,
     filters: {
         medicName: string[]
         specialtyName: string[]
-        workType: string[]
     },
-    scheduleData: Array<MedicSchedule>,
-    medicData: Array<MedicData>,
-    specialties: Array<{ specialtyId: string, specialtyName: string }>
+    medicsData: Array<MedicData> | undefined,
+    specialtiesData: Array<{ specialtyId: string, specialtyName: string }> | undefined
+    branchesData: Array<{ branchId: string, branchName: string }> | undefined
 }

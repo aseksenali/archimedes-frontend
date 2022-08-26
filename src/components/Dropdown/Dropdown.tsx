@@ -16,7 +16,7 @@ const Dropdown = forwardRef((props: DropdownProps, ref: ForwardedRef<HTMLDivElem
     }, [])
 
     return (
-        <div style={ { position: 'relative' } }>
+        <div style={ { position: 'relative', width: '100%' } }>
             { props.isOpen &&
                 <DropdownWrapper ref={ ref } { ...props }>
                     { props.children }

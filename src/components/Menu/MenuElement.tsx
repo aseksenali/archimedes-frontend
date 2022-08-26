@@ -1,44 +1,56 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import React, { SVGProps, VFC } from 'react'
 import styled from 'styled-components'
 import { MenuElementProps } from './types'
 import clsx from 'clsx'
 
 type IconWithTextProps = {
     gap: number
-    icon: IconDefinition
+    icon: VFC<SVGProps<SVGSVGElement>>,
     text: string
 }
 
 const IconWithTextWrapper = styled.div<{ gap: number }>`
   display: grid;
-  grid-template-columns: 30px auto;
-  column-gap: ${ props => `${ props.gap }px` };
+  grid-template-columns: auto auto;
+  column-gap: ${ props => `${ props.gap }em` };
   flex-direction: row;
 `
 
 const MenuElementWrapper = styled.div`
-  padding: 1em 1em;
+  padding: 0 1em;
+  height: 53px;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   white-space: nowrap;
   border-bottom: 1px solid #aaa;
   color: var(--primary-color);
 
   &.selected {
-    background-color: #00607c;
+    background-color: var(--primary-color);
     color: white;
+    & svg {
+      fill: white;
+    }
   }
-
-  &:hover:not(.selected) {
-    background-color: #EDF5F8;
+  
+  &:not(.selected) {
+    & svg {
+      fill: var(--primary-color);
+    }
+    &:hover {
+      background-color: #EDF5F8;
+    }
   }
 `
 
-const IconWithText = (props: IconWithTextProps) => {
+const IconWithText = ({ icon: Icon, ...props }: IconWithTextProps) => {
     return (
         <IconWithTextWrapper gap={ props.gap }>
-            <FontAwesomeIcon icon={ props.icon } size={ 'lg' }/>
+            <Icon style={ {
+                width: '1.3em',
+                height: '1.3em',
+            } }/>
             <span>{ props.text }</span>
         </IconWithTextWrapper>
     )
@@ -47,7 +59,7 @@ const IconWithText = (props: IconWithTextProps) => {
 const MenuElement = (props: MenuElementProps) => {
     return (
         <MenuElementWrapper onClick={ props.onSelectionChanged } className={ clsx({ 'selected': props.selected }) }>
-            <IconWithText gap={ 10 } text={ props.text } icon={ props.icon }/>
+            <IconWithText gap={ 1 } text={ props.text } icon={ props.icon }/>
         </MenuElementWrapper>
     )
 }

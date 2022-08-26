@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
-import { convertToDateString } from '../../helpers/DateHelper'
+import { DateTime } from 'luxon'
 
 const TopBadgeWrapper = styled.div`
   display: flex;
   background-color: var(--primary-color);
   color: white;
   font-size: 1em;
-  height: 7.1%;
+  height: 53px;
 `
 
 const SearchWrapper = styled.div`
@@ -49,7 +49,7 @@ const DateWrapper = styled.div`
 `
 
 const BeneficiarySearch = () => {
-    const date = new Date()
+    const date = useMemo(() => DateTime.utc().setLocale('ru'), [])
 
     return (
         <TopBadgeWrapper>
@@ -62,7 +62,7 @@ const BeneficiarySearch = () => {
                 </div>
             </SearchWrapper>
             <DateWrapper>
-                <p>Дата: { convertToDateString(date) }</p>
+                <p>Дата: { date.toLocal().toLocaleString({ dateStyle: 'long' }) }</p>
             </DateWrapper>
         </TopBadgeWrapper>
     )

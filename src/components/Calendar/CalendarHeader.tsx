@@ -1,54 +1,57 @@
 import { CalendarSelectorHeaderProps } from './types'
 import React from 'react'
 import * as styled from './styles'
-import { monthNames } from '../../constants/calendarConstants'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faAngleRight } from '@fortawesome/free-solid-svg-icons'
+import { ReactComponent as AngleDown } from '../../assets/icons/arrowLeft.svg'
 
-const CalendarHeader = ({ month, year, setMonth, setYear }: CalendarSelectorHeaderProps) => {
-    const onPrevMonthClick = () => {
-        if (month - 1 < 0) {
-            setMonth(11)
-            setYear(year - 1)
-        } else {
-            setMonth(month - 1)
-        }
-    }
-    const onNextMonthClick = () => {
-        if (month + 1 > 11) {
-            setMonth(0)
-            setYear(year + 1)
-        } else {
-            setMonth(month + 1)
-        }
-    }
+const capitalize = (str: string): string => str.substring(0, 1).toUpperCase().concat(str.substring(1).toLowerCase())
 
-    const onPrevYearClick = () => {
-        setYear(year - 1)
-    }
+const CalendarHeader = ({ monthAndYear, setMonthAndYear }: CalendarSelectorHeaderProps) => {
+    const onPrevMonthClick = () =>
+        setMonthAndYear(monthAndYear.minus({ month: 1 }))
 
-    const onNextYearClick = () => {
-        setYear(year + 1)
-    }
+    const onNextMonthClick = () =>
+        setMonthAndYear(monthAndYear.plus({ month: 1 }))
+
+    const onPrevYearClick = () =>
+        setMonthAndYear(monthAndYear.minus({ year: 1 }))
+
+    const onNextYearClick = () =>
+        setMonthAndYear(monthAndYear.plus({ year: 1 }))
 
     return (
         <styled.HeaderWrapper>
             <styled.MonthWrapper>
                 <styled.NavigationButton onClick={ onPrevMonthClick }>
-                    <FontAwesomeIcon icon={ faAngleLeft }/>
+                    <AngleDown
+                        style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
                 </styled.NavigationButton>
-                <span>{ monthNames[month].substring(0, 1).toUpperCase() + monthNames[month].substring(1) }</span>
+                <span>{ capitalize(monthAndYear.toFormat('LLLL')) }</span>
                 <styled.NavigationButton onClick={ onNextMonthClick }>
-                    <FontAwesomeIcon icon={ faAngleRight }/>
+                    <AngleDown style={ {
+                        width: '1em',
+                        height: '1em',
+                        position: 'relative',
+                        top: '.2em',
+                        fill: 'white',
+                        transform: 'rotateZ(180deg)',
+                    } }/>
                 </styled.NavigationButton>
             </styled.MonthWrapper>
             <styled.YearWrapper>
                 <styled.NavigationButton onClick={ onPrevYearClick }>
-                    <FontAwesomeIcon icon={ faAngleLeft }/>
+                    <AngleDown
+                        style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
                 </styled.NavigationButton>
-                <span>{ year }</span>
+                <span>{ monthAndYear.toFormat('yyyy') }</span>
                 <styled.NavigationButton onClick={ onNextYearClick }>
-                    <FontAwesomeIcon icon={ faAngleRight }/>
+                    <AngleDown style={ {
+                        width: '1em',
+                        height: '1em',
+                        position: 'relative',
+                        top: '.2em',
+                        fill: 'white',
+                        transform: 'rotateZ(180deg)',
+                    } }/>
                 </styled.NavigationButton>
             </styled.YearWrapper>
         </styled.HeaderWrapper>

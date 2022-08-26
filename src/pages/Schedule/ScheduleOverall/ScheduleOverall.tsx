@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react'
-import { Cell, Root } from '../GridComponents'
-import { Column, GridColumnExtension, GroupingState, IntegratedGrouping } from '@devexpress/dx-react-grid'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Column, GridColumnExtension, GroupingState, GroupKey, IntegratedGrouping } from '@devexpress/dx-react-grid'
 import {
     Grid,
     TableFixedColumns,
@@ -8,86 +7,24 @@ import {
     TableHeaderRow,
     VirtualTable,
 } from '@devexpress/dx-react-grid-material-ui'
-import { MedicSchedule } from '../../../interfaces/MedicSchedule'
-import { getWeekForDay } from '../../../helpers/DateHelper'
 import { useOutletContext } from 'react-router'
 import { ScheduleOutletContext } from '../types'
-import { workingHours } from './utils'
-import { MedicData } from '../../../interfaces/MedicData'
-
-type DaySchedule = {
-    schedule?: string
-    hasFreeWindows: boolean
-    medicId: string
-}
-
-type MedicScheduleRow = {
-    medicId: string
-    medicName: string
-    branchId: string
-    specialtyName: string
-    firstDay: DaySchedule
-    secondDay: DaySchedule
-    thirdDay: DaySchedule
-    fourthDay: DaySchedule
-    fifthDay: DaySchedule
-    sixthDay: DaySchedule
-    seventhDay: DaySchedule
-}
-
-const getRows = (date: Date, data: Array<MedicSchedule>, medicData: Array<MedicData>, specialties: Array<{ specialtyId: string, specialtyName: string }>): Array<MedicScheduleRow> => {
-    return data.flatMap((value: MedicSchedule) => {
-            const schedule = workingHours(date, value)
-            const medic = medicData.find(medic => medic.medicId === value.medicId)
-            if (!medic) throw Error()
-            return value.specialtyIds.map(specialtyId => {
-                const specialty = specialties.find(specialty => specialty.specialtyId === specialtyId)
-                if (!specialty) throw Error()
-                return {
-                    medicId: value.medicId,
-                    medicName: medic.medicName,
-                    branchId: value.branchId,
-                    specialtyName: specialty.specialtyName,
-                    firstDay: {
-                        schedule: schedule.MONDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    secondDay: {
-                        schedule: schedule.TUESDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    thirdDay: {
-                        schedule: schedule.WEDNESDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    fourthDay: {
-                        schedule: schedule.THURSDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    fifthDay: {
-                        schedule: schedule.FRIDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    sixthDay: {
-                        schedule: schedule.SATURDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                    seventhDay: {
-                        schedule: schedule.SUNDAY,
-                        hasFreeWindows: true,
-                        medicId: value.medicId,
-                    },
-                }
-            })
-        },
-    )
-}
+import { useLazyGetAllSchedulesBySpecialtyIdQuery } from '../../../redux/reducers/scheduleApi'
+import {
+    BodyComponent,
+    CellComponent,
+    ContainerComponent,
+    GroupCellComponent,
+    HeadComponent,
+    HeaderCellComponent,
+    RootComponent,
+    StubCellComponent,
+} from '../../../components/GridComponents/VirtualTableComponents'
+import { GroupedData, MedicScheduleRow, WeekSchedule } from './types'
+import { useLazyGetAppointmentsBySpecialtyIdQuery } from '../../../redux/reducers/appointmentApi'
+import { DateTime, Interval } from 'luxon'
+import { MedicSchedule } from '../../../interfaces/MedicSchedule'
+import { AppointmentModel } from '@devexpress/dx-react-scheduler'
 
 const columnExtensions: Array<GridColumnExtension> = [
     { columnName: 'medicName', width: 300 },
@@ -95,74 +32,240 @@ const columnExtensions: Array<GridColumnExtension> = [
 
 const leftColumn = [ 'medicName' ]
 
-const HeaderCell = (props: TableHeaderRow.CellProps) => {
-    if (props.column.name !== 'medicName')
-        return (
-            <TableHeaderRow.Cell { ...props } style={ { borderRight: '1px solid #cecece' } }>
-                { props.column.title }
-            </TableHeaderRow.Cell>
-        )
-    else return <TableHeaderRow.Cell { ...props }>{ props.column.title }</TableHeaderRow.Cell>
-}
-
 const ScheduleOverall = () => {
-    const { date, filters, scheduleData, medicData, specialties } = useOutletContext<ScheduleOutletContext>()
+    const [ triggerSchedulesRequest ] = useLazyGetAllSchedulesBySpecialtyIdQuery()
+    const [ triggerAppointmentsRequest ] = useLazyGetAppointmentsBySpecialtyIdQuery()
+    const {
+        date,
+        filters,
+        medicsData,
+        specialtiesData,
+        branchesData,
+    } = useOutletContext<ScheduleOutletContext>()
 
-    const week = useMemo(() => getWeekForDay(date), [ date ])
+    const week = useMemo(() => {
+        return date.startOf('week').until(date.endOf('week'))
+            .splitBy({ day: 1 })
+            .map(day => day.start.startOf('day').setLocale('ru'))
+    }, [ date ])
 
     const columns: Array<Column> = useMemo(() => [
         { name: 'medicName', title: 'ФИО врача' },
         { name: 'specialtyName', title: 'Специализация' },
-        { name: 'firstDay', title: week[0].toLocaleDateString() },
-        { name: 'secondDay', title: week[1].toLocaleDateString() },
-        { name: 'thirdDay', title: week[2].toLocaleDateString() },
-        { name: 'fourthDay', title: week[3].toLocaleDateString() },
-        { name: 'fifthDay', title: week[4].toLocaleDateString() },
-        { name: 'sixthDay', title: week[5].toLocaleDateString() },
-        { name: 'seventhDay', title: week[6].toLocaleDateString() },
+        { name: 'firstDay', title: week[0].toLocal().toFormat('dd MMMM') },
+        { name: 'secondDay', title: week[1].toLocal().toFormat('dd MMMM') },
+        { name: 'thirdDay', title: week[2].toLocal().toFormat('dd MMMM') },
+        { name: 'fourthDay', title: week[3].toLocal().toFormat('dd MMMM') },
+        { name: 'fifthDay', title: week[4].toLocal().toFormat('dd MMMM') },
+        { name: 'sixthDay', title: week[5].toLocal().toFormat('dd MMMM') },
+        { name: 'seventhDay', title: week[6].toLocal().toFormat('dd MMMM') },
     ], [ week ])
 
-    const rows = useMemo(() => {
-        let rows: Array<MedicScheduleRow> | undefined
-        if (scheduleData && medicData && specialties) {
-            rows = getRows(date, scheduleData, medicData, specialties)
-            Object.entries(filters).forEach(([ key, value ]) => {
-                    rows = rows!.filter(row => value.length === 0 || value.some(val => {
-                            switch (key) {
-                                case 'medicName':
-                                case 'specialtyName': {
-                                    return val === row[key]
-                                }
-                                case 'workType': {
-                                    return true
-                                }
-                                default:
-                                    return true
-                            }
-                        },
-                    ))
+    const workingHours = useCallback((scheduleData: MedicSchedule, appointments: Array<AppointmentModel>): WeekSchedule => {
+        console.log('fired')
+        const intervals = appointments.map(appointment => Interval.fromDateTimes(DateTime.fromISO(appointment.startDate as string).convertToUTC(), DateTime.fromISO(appointment.endDate as string).convertToUTC()))
+        return week.reduce((result: WeekSchedule, day) => {
+            const weekDayNames = [ 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY' ] as Array<keyof typeof result>
+            const weekDay = weekDayNames[day.weekday - 1]
+            if (day.isHoliday(scheduleData.holidays)) return {
+                ...result,
+                [weekDay]: {
+                    workingHours: 'Выходной',
+                    hasFreeWindows: false,
                 },
-            )
+            }
+            const specialDay = day.findSpecialDay(scheduleData.specialDays)
+            if (specialDay) {
+                return {
+                    ...result,
+                    [weekDay]: {
+                        workingHours: `${ specialDay.start.toFormat('T') } - ${ specialDay.end.toFormat('T') }`,
+                        hasFreeWindows: !!appointments && specialDay.difference(...intervals).length !== 0,
+                    },
+                }
+            }
+            let tmp = {}
+            const schedule = scheduleData.workingDays[weekDay]
+            if (!!schedule) {
+                const workingDayStart = DateTime.fromISO(schedule.startTime, { zone: 'utc' }).set({
+                    year: day.year,
+                    month: day.month,
+                    day: day.day,
+                })
+                const workingDayEnd = DateTime.fromISO(schedule.endTime, { zone: 'utc' }).set({
+                    year: day.year,
+                    month: day.month,
+                    day: day.day,
+                })
+                const workingDay = Interval.fromDateTimes(workingDayStart, workingDayEnd)
+                tmp = {
+                    ...tmp,
+                    [weekDay]: {
+                        workingHours: `${ DateTime.fromISO(schedule.startTime, { zone: 'utc' }).toFormat('T') } - ${ DateTime.fromISO(schedule.endTime, { zone: 'utc' }).toFormat('T') }`,
+                        hasFreeWindows: !!appointments && workingDay.difference(...intervals).length !== 0,
+                    },
+                }
+            } else {
+                tmp = {
+                    ...tmp, [weekDay]: {
+                        workingHours: 'Выходной',
+                        hasFreeWindows: false,
+                    },
+                }
+            }
+            return { ...result, ...tmp }
+        }, {
+            MONDAY: undefined,
+            TUESDAY: undefined,
+            WEDNESDAY: undefined,
+            THURSDAY: undefined,
+            FRIDAY: undefined,
+            SATURDAY: undefined,
+            SUNDAY: undefined,
+        } as WeekSchedule)
+    }, [ week ])
+
+    const [ groups, setGroups ] = useState<Array<GroupedData> | undefined>()
+
+    const rows: Array<MedicScheduleRow> | undefined = useMemo(() => {
+        return groups && groups.flatMap((group) => {
+                return group.rows.map(row => {
+                    const schedule = row.schedule && row.appointments && workingHours(row.schedule, row.appointments)
+                    const medic = row.medic
+                    return {
+                        medicId: medic.medicId,
+                        medicName: medic.medicName,
+                        branchId: medic.branch,
+                        specialtyId: group.specialtyId,
+                        specialtyName: group.specialtyName,
+                        firstDay: {
+                            schedule: schedule?.MONDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.MONDAY && schedule.MONDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        secondDay: {
+                            schedule: schedule?.TUESDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.TUESDAY && schedule.TUESDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        thirdDay: {
+                            schedule: schedule?.WEDNESDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.WEDNESDAY && schedule.WEDNESDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        fourthDay: {
+                            schedule: schedule?.THURSDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.THURSDAY && schedule.THURSDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        fifthDay: {
+                            schedule: schedule?.FRIDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.FRIDAY && schedule.FRIDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        sixthDay: {
+                            schedule: schedule?.SATURDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.SATURDAY && schedule.SATURDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                        seventhDay: {
+                            schedule: schedule?.SUNDAY?.workingHours,
+                            hasFreeWindows: !!schedule?.SUNDAY && schedule.SUNDAY.hasFreeWindows,
+                            medicId: medic.medicId,
+                        },
+                    }
+                })
+            },
+        )
+    }, [ groups, workingHours ])
+
+    useEffect(() => {
+        if (specialtiesData && medicsData) {
+            const groupsInfo: Array<GroupedData> | undefined = specialtiesData.filter(specialty => {
+                if (filters.specialtyName.length === 0) return true
+                return filters.specialtyName.some(filter => filter === specialty.specialtyName)
+            }).map(specialty => {
+                return {
+                    ...specialty,
+                    rows: medicsData
+                        .filter(medic => medic.specialties.some(medicsSpecialty => medicsSpecialty === specialty.specialtyId))
+                        .map(medic => ({
+                            medic,
+                        })),
+                }
+            })
+            setGroups(groupsInfo)
         }
-        return rows
-    }, [ filters, date, medicData, scheduleData, specialties ])
+    }, [ filters.specialtyName, medicsData, specialtiesData ])
+
+    const onGroupExpand = useCallback(async (expandedGroups: Array<GroupKey>) => {
+        const callback = async () => {
+            if (groups) {
+                const changedGroups: Array<GroupedData & { changed: boolean }> = await Promise.all(expandedGroups.map(expandedGroup => groups.find(group => group.specialtyName === expandedGroup)).map(async (group) => {
+                    if (!group) throw Error()
+                    if (group && group.rows[0].schedule) return { ...group, changed: false }
+                    if (medicsData) {
+                        const { data: appointments } = await triggerAppointmentsRequest({
+                            startDate: date.startOf('week').toMillis(),
+                            endDate: date.endOf('week').toMillis(),
+                            specialtyId: group.specialtyId,
+                        })
+                        const { data: schedules } = await triggerSchedulesRequest(group.specialtyId)
+                        if (!appointments || !schedules) throw Error()
+                        const rows = medicsData.filter(medic => group.rows.some(row => row.medic.medicId === medic.medicId)).map(medic => {
+                            const schedule = schedules.find(schedule => schedule.medicId === medic.medicId)
+                            const medicsAppointments = appointments.filter(appointment => appointment.medicId === medic.medicId)
+                            return {
+                                medic, schedule, appointments: medicsAppointments,
+                            }
+                        })
+                        return {
+                            ...group,
+                            rows: rows,
+                            changed: true,
+                        }
+                    } else return { ...group, changed: false }
+                }))
+                return groups.map(group => {
+                    const newGroup = changedGroups.find(changedGroup => changedGroup.changed && changedGroup.specialtyId === group.specialtyId)
+                    if (newGroup) return { group: newGroup, changed: true }
+                    return { group, changed: false }
+                })
+            }
+        }
+        callback().then(result => {
+            if (result && result.some(value => value.changed))
+                setGroups(result.map(value => value.group))
+        })
+    }, [ date, groups, medicsData, triggerAppointmentsRequest, triggerSchedulesRequest ])
+
+    const rootComponent = RootComponent as React.ComponentType<any>
 
     return (
         <Grid
             rows={ rows ? rows : [] }
             columns={ columns }
-            getRowId={ (row: MedicScheduleRow) => row.medicId + row.specialtyName }
-            rootComponent={ Root }>
+            getRowId={ (row: MedicScheduleRow) => row.medicId + row.specialtyId }
+            rootComponent={ rootComponent }>
             <GroupingState
                 grouping={ [ { columnName: 'specialtyName' } ] }
+                onExpandedGroupsChange={ onGroupExpand }
             />
             <IntegratedGrouping/>
             <VirtualTable
-                cellComponent={ Cell }
+                height={ 'auto' }
+                estimatedRowHeight={ 53 }
                 columnExtensions={ columnExtensions }
-                messages={ { noData: 'Нет данных' } }/>
-            <TableHeaderRow cellComponent={ HeaderCell }/>
-            <TableGroupRow/>
+                messages={ { noData: groups ? 'Загрузка...' : 'Нет данных' } }
+                containerComponent={ ContainerComponent }
+                cellComponent={ CellComponent }
+                headComponent={ HeadComponent }
+                bodyComponent={ BodyComponent }
+                stubCellComponent={ StubCellComponent }
+                stubHeaderCellComponent={ StubCellComponent }/>
+            <TableHeaderRow
+                cellComponent={ HeaderCellComponent }/>
+            <TableGroupRow cellComponent={ GroupCellComponent }/>
             <TableFixedColumns
                 leftColumns={ leftColumn }
             />

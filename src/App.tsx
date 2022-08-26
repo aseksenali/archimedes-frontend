@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import React from 'react'
 import './App.css'
 import { Provider } from 'react-redux'
 
@@ -13,13 +13,11 @@ import ScheduleOverall from './pages/Schedule/ScheduleOverall/ScheduleOverall'
 
 const AppWrapper = () => {
     return (
-        <StrictMode>
-            <Provider store={ store }>
-                <BrowserRouter>
-                    <App/>
-                </BrowserRouter>
-            </Provider>
-        </StrictMode>
+        <Provider store={ store }>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
+        </Provider>
     )
 }
 
@@ -30,7 +28,7 @@ const App = () => {
             <Route path={ '/views' } element={ <MainPage/> }>
                 <Route path={ '/views/schedule' } element={ <Schedule/> }>
                     <Route index element={ <ScheduleOverall/> }/>
-                    <Route path={ '/views/schedule/details' } element={ <ScheduleDetails/> }/>
+                    <Route path={ '/views/schedule/:medicId' } element={ <ScheduleDetails/> }/>
                 </Route>
                 <Route path={ '/views/ambulance' } element={ <Ambulance/> }/>
             </Route>

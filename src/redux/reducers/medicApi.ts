@@ -15,9 +15,13 @@ export const medicApi = createApi({
                     ]
                     : [ { type: 'MedicData', id: 'LIST' } ],
         }),
+        getMedicById: builder.query<MedicData, string>({
+            query: (medicId) => `medics/${ medicId }`,
+            providesTags: (result) => [ { type: 'MedicData', id: result && result.medicId } ],
+        }),
     }),
 })
 
-export const { useGetMedicsQuery } = medicApi
+export const { useGetMedicsQuery, useLazyGetMedicByIdQuery } = medicApi
 
 export default medicApi.reducer

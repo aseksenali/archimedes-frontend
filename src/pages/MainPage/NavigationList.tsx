@@ -1,26 +1,25 @@
 import { NavigationData } from './types'
-import { faCalendar } from '@fortawesome/free-regular-svg-icons'
-import {
-    faHospitalUser,
-    faHouseChimneyMedical,
-    faLaptopMedical,
-    faNotesMedical,
-    faPills,
-    faTruckMedical,
-    faUserDoctor,
-} from '@fortawesome/free-solid-svg-icons'
+import { ReactComponent as schedule } from '../../assets/icons/schedule.svg'
+import { ReactComponent as ambulance } from '../../assets/icons/ambulanceBold.svg'
+import { ReactComponent as callJournal } from '../../assets/icons/callJournalBold.svg'
+import { ReactComponent as onlineConsultation } from '../../assets/icons/onlineConsultation.svg'
+import { ReactComponent as lpu } from '../../assets/icons/lpu_2.svg'
+import { ReactComponent as editSchedule } from '../../assets/icons/editBold.svg'
+import { ReactComponent as medicInfo } from '../../assets/icons/medic.svg'
+import { ReactComponent as hospitalization } from '../../assets/icons/hospitalization.svg'
+
 import { useNavigate } from 'react-router-dom'
 import Menu from '../../components/Menu/Menu'
 
 const navigation: Array<NavigationData> = [
-    { text: 'График', icon: faCalendar, path: '/views/schedule' },
-    { text: 'Вызов скорой помощи', icon: faTruckMedical, path: '/views/ambulance' },
-    { text: 'Журнал вызовов', icon: faHouseChimneyMedical, path: '/schedule' },
-    { text: 'Онлайн консультация', icon: faLaptopMedical, path: '/schedule' },
-    { text: 'Список ЛПУ', icon: faPills, path: '/schedule' },
-    { text: 'Редактирование графика', icon: faNotesMedical, path: '/schedule' },
-    { text: 'Информация о враче', icon: faUserDoctor, path: '/schedule' },
-    { text: 'Журнал госпитализаций', icon: faHospitalUser, path: '/schedule' },
+    { text: 'График', icon: schedule, path: '/views/schedule' },
+    { text: 'Вызов скорой помощи', icon: ambulance, path: '/views/ambulance' },
+    { text: 'Журнал вызовов', icon: callJournal, path: '/schedule' },
+    { text: 'Онлайн консультация', icon: onlineConsultation, path: '/schedule' },
+    { text: 'Список ЛПУ', icon: lpu, path: '/schedule' },
+    { text: 'Редактирование графика', icon: editSchedule, path: '/schedule' },
+    { text: 'Информация о враче', icon: medicInfo, path: '/schedule' },
+    { text: 'Журнал госпитализаций', icon: hospitalization, path: '/schedule' },
 ]
 
 const NavigationList = () => {

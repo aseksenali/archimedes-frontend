@@ -5,35 +5,24 @@ import { DateInput, DateRangePickerWrapper } from './styles'
 import Calendar from '../Calendar/Calendar'
 import clsx from 'clsx'
 import Dropdown from '../Dropdown/Dropdown'
+import { DateTime, Interval } from 'luxon'
 
-const hash = (date: Date): number => {
-    return date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate()
-}
-
-const Day: React.FC<DateRangeDayProps> = ({ value, startDate, endDate, currentMonth, onClick }) => {
-    const isSelected = (date: Date): boolean => {
-        return !!(endDate) && hash(date) >= hash(startDate) &&
-            hash(date) <= hash(endDate)
-    }
-    const isStart = (date: Date): boolean => {
-        return hash(date) === hash(startDate)
+const Day = ({ day, startDate, endDate, currentMonth, onClick }: DateRangeDayProps) => {
+    const isSelected = (date: DateTime): boolean => {
+        return !!(endDate) && Interval.fromDateTimes(startDate, endDate).contains(date)
     }
 
-    const isEnd = (date: Date): boolean => {
-        return !!(endDate) && hash(date) === hash(endDate)
-    }
-
-    const notCurrentMonth = (date: Date): boolean => {
-        return date.getMonth() !== currentMonth
+    const notCurrentMonth = (date: DateTime): boolean => {
+        return date.month !== currentMonth
     }
 
     return (
         <styled.Day className={ clsx({
-            'selected': isSelected(value),
-            'selection_border': isStart(value) || isEnd(value),
-            'different_month': notCurrentMonth(value),
+            'selected': isSelected(day),
+            'selection_border': +startDate === +day || (endDate && +endDate === +day),
+            'different_month': notCurrentMonth(day),
         }) } onClick={ onClick }>
-            { value.getDate() }
+            { day.day }
         </styled.Day>
     )
 }
@@ -43,9 +32,7 @@ const DateRangePicker = (props: DateRangePickerProps) => {
     const endInputRef = useRef<HTMLInputElement>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
     const [ startDate, setStartDate ] = useState(props.initialValue)
-    const weekLater = new Date(props.initialValue.getTime())
-    weekLater.setDate(weekLater.getDate() + 6)
-    const [ endDate, setEndDate ] = useState<Date | undefined>(weekLater)
+    const [ endDate, setEndDate ] = useState<DateTime | undefined>(startDate.plus({ week: 1 }))
     const [ isOpen, setOpen ] = useState(false)
 
     const handleMouseClick = (e: MouseEvent) => {
@@ -64,14 +51,14 @@ const DateRangePicker = (props: DateRangePickerProps) => {
 
     const openDropdown = () => setOpen(true)
 
-    const onClick = (date: Date) => (_: React.MouseEvent<HTMLDivElement>) => {
+    const onClick = (date: DateTime) => (_: React.MouseEvent<HTMLDivElement>) => {
         if (endDate) {
             setStartDate(date)
             setEndDate(undefined)
         } else {
-            if (hash(date) < hash(startDate)) {
-                setEndDate(new Date(startDate.getTime()))
-                setStartDate(new Date(date.getFullYear(), date.getMonth(), date.getDate()))
+            if (date < startDate) {
+                setEndDate(startDate)
+                setStartDate(date)
             } else {
                 setEndDate(date)
             }
@@ -82,17 +69,17 @@ const DateRangePicker = (props: DateRangePickerProps) => {
         <DateRangePickerWrapper>
             <DateInput onClick={ openDropdown }
                        ref={ startInputRef }>
-                { startDate.toLocaleDateString() }
+                { startDate.toLocaleString() }
             </DateInput>
             <DateInput onClick={ openDropdown }
                        ref={ endInputRef }>
-                { endDate ? endDate.toLocaleDateString() : '' }
+                { endDate ? endDate.toLocaleString() : '' }
             </DateInput>
             <Dropdown isOpen={ isOpen } closeDropdown={ () => setOpen(false) } handleMouseClick={ handleMouseClick }
                       ref={ dropdownRef } style={ { backgroundColor: '#00607c', width: 'content-box' } }>
                 <Calendar setStartDate={ setStartDate } setEndDate={ setEndDate }
                           startDate={ startDate } endDate={ endDate }
-                          onClick={ onClick } type={ 'daterange' }/>
+                          onClick={ onClick } type={ 'dateRange' }/>
             </Dropdown>
         </DateRangePickerWrapper>
     )

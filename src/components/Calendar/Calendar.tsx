@@ -2,16 +2,15 @@ import React, { useState } from 'react'
 import { CalendarProps } from './types'
 import CalendarHeader from './CalendarHeader'
 import CalendarBody from './CalendarBody'
+import { DateTime } from 'luxon'
 
 const Calendar = (props: CalendarProps) => {
-    const [ month, setMonth ] = useState(new Date().getMonth())
-    const [ year, setYear ] = useState(new Date().getFullYear())
+    const [ monthAndYear, setMonthAndYear ] = useState(DateTime.utc().startOf('month').setLocale('ru'))
 
     return (
         <>
-            <CalendarHeader month={ month } year={ year }
-                            setMonth={ setMonth } setYear={ setYear }/>
-            <CalendarBody month={ month } year={ year } { ...props } />
+            <CalendarHeader monthAndYear={ monthAndYear } setMonthAndYear={ setMonthAndYear }/>
+            <CalendarBody monthAndYear={ monthAndYear } { ...props } />
         </>
     )
 }

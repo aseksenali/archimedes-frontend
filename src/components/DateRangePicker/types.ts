@@ -1,14 +1,15 @@
 import React from 'react'
+import { DateTime } from 'luxon'
 
 interface DateRangePickerProps {
-    initialValue: Date
+    initialValue: DateTime
     showInputs: boolean
 }
 
 interface DateRangeDayProps {
-    value: Date
-    startDate: Date
-    endDate: Date | undefined
+    day: DateTime
+    startDate: DateTime
+    endDate: DateTime | undefined
     onClick: (event: React.MouseEvent<HTMLDivElement>) => void
     currentMonth: number
 }

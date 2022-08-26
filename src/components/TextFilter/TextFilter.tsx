@@ -2,8 +2,6 @@ import React, { useMemo, useRef, useState } from 'react'
 import { TextFilterProps } from './types'
 import Dropdown from '../Dropdown/Dropdown'
 import * as styled from './styles'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import SearchList from '../SearchList/SearchList'
 
 const TextFilter = (props: TextFilterProps) => {
@@ -40,20 +38,13 @@ const TextFilter = (props: TextFilterProps) => {
     return (
         <styled.TextFilterWrapper widthSize={ props.width }>
             <label>{ props.label }</label>
-            <div style={ { position: 'relative', whiteSpace: 'nowrap' } }>
+            <styled.TextInputWrapper>
                 <styled.TextInput type={ 'text' }
                                   onClick={ () => isOpen ? setOpen(false) : openDropdown() }
                                   value={ inputValue ? inputValue : '' } ref={ inputRef }
                                   placeholder={ props.placeholder } readOnly/>
-                <FontAwesomeIcon icon={ faAngleDown }
-                                 style={ {
-                                     position: 'relative',
-                                     right: '1.2em',
-                                     pointerEvents: 'none',
-                                     transition: 'transform .1s',
-                                     transform: isOpen ? 'rotateX(180deg)' : undefined,
-                                 } }/>
-            </div>
+                <styled.Icon open={ isOpen }/>
+            </styled.TextInputWrapper>
             <Dropdown isOpen={ isOpen } closeDropdown={ () => setOpen(false) } handleMouseClick={ handleMouseClick }
                       ref={ dropdownRef } style={ {
                 backgroundColor: 'var(--primary-color)',

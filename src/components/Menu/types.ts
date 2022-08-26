@@ -1,9 +1,9 @@
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
 import { NavigationData } from '../../pages/MainPage/types'
+import { SVGProps, VFC } from 'react'
 
 export type MenuElementProps = {
     text: string
-    icon: IconDefinition
+    icon: VFC<SVGProps<SVGSVGElement>>
     onSelectionChanged: () => void
     selected: boolean
 }

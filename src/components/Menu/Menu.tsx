@@ -12,7 +12,7 @@ const Menu = (props: MenuProps) => {
             {
                 props.items.map(item => <MenuElement onSelectionChanged={ () => props.onSelectionChanged(item) }
                                                      key={ item.text }
-                                                     selected={ location.pathname === item.path } { ...item }/>)
+                                                     selected={ location.pathname.startsWith(item.path) } { ...item }/>)
             }
         </MenuWrapper>
     )

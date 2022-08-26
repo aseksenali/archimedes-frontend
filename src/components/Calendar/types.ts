@@ -1,35 +1,33 @@
 import React from 'react'
+import { DateTime } from 'luxon'
 
 interface CalendarSelectorHeaderProps {
-    month: number
-    year: number
-    setMonth: (month: number) => void
-    setYear: (year: number) => void
+    monthAndYear: DateTime
+    setMonthAndYear: (dateTime: DateTime) => void
 }
 
 type DateRangeProps = {
-    type: 'daterange'
-    startDate: Date
-    endDate: Date | undefined
-    setStartDate: (date: Date) => void
-    setEndDate: (date: Date) => void
+    type: 'dateRange'
+    startDate: DateTime
+    endDate: DateTime | undefined
+    setStartDate: (date: DateTime) => void
+    setEndDate: (date: DateTime) => void
 }
 
 type WeekProps = {
     type: 'week'
-    selectedDate: Date
-    setSelectedDate: (date: Date) => void
+    selectedDate: DateTime
+    setSelectedDate: (date: DateTime) => void
 }
 
 type CalendarSelectorBodyProps = {
-    month: number
-    year: number
-    onClick: (date: Date) => ((event: React.MouseEvent<HTMLDivElement>) => void)
+    monthAndYear: DateTime
+    onClick: (dateTime: DateTime) => ((event: React.MouseEvent<HTMLDivElement>) => void)
 } & (DateRangeProps | Omit<WeekProps, 'setSelectedDate'>)
 
 type CalendarProps =
     (DateRangeProps | Omit<WeekProps, 'setSelectedDate'>)
-    & { onClick: (date: Date) => ((event: React.MouseEvent<HTMLDivElement>) => void) }
+    & { onClick: (date: DateTime) => ((event: React.MouseEvent<HTMLDivElement>) => void) }
 
 type DayWithMonth = {
     day: number,

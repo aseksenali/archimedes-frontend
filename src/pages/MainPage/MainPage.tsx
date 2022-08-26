@@ -7,10 +7,6 @@ import BeneficiarySearch from '../../components/BeneficiarySearch/BeneficiarySea
 import React from 'react'
 
 const MainPage = () => {
-    const onOpenedChanged = (value: boolean) => {
-        console.log(value)
-    }
-
     return (
         <>
             <Header/>
@@ -20,7 +16,6 @@ const MainPage = () => {
                 render={ () => <NavigationList/> }
                 opened={ true }
                 revealMode={ 'expand' }
-                onOpenedChange={ onOpenedChanged }
                 height={ '90%' }
             >
                 <styled.MainPart>

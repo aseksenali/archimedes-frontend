@@ -1,10 +1,11 @@
+import { DateTime } from 'luxon'
 import { MutableRefObject } from 'react'
 
 type WeekFilterProps = {
-    initialValue: Date
+    initialValue: DateTime
     type: 'week'
-    selectedDate: Date
-    onChange: (date: Date) => void
+    selectedDate: DateTime
+    onChange: (date: DateTime) => void
 }
 
 type TextFilterProps = {
@@ -26,10 +27,10 @@ type TextFilterProps = {
 })
 
 type DateRangeFilterProps = {
-    initialValue: Date
+    initialValue: DateTime
     type: 'dateRange'
-    onStartDateChange: (date: Date) => void
-    onEndDateChange: (date: Date) => void
+    onStartDateChange: (date: DateTime) => void
+    onEndDateChange: (date: DateTime) => void
 }
 
 export type FilterProps =

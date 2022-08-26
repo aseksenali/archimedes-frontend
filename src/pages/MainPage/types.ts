@@ -1,8 +1,8 @@
-import { IconDefinition } from '@fortawesome/free-solid-svg-icons'
+import { SVGProps, VFC } from 'react'
 
 interface NavigationData {
     text: string
-    icon: IconDefinition
+    icon: VFC<SVGProps<SVGSVGElement>>
     path: string
 }
 

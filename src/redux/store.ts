@@ -7,6 +7,7 @@ import { medicApi } from './reducers/medicApi'
 import { specialtyApi } from './reducers/specialtyApi'
 import { branchApi } from './reducers/branchApi'
 import { appointmentApi } from './reducers/appointmentApi'
+import { beneficiaryApi } from './reducers/beneficiaryApi'
 
 const saveToLocalStorage = (name: string, state: UserStoreState) => {
     try {
@@ -42,6 +43,7 @@ const store = configureStore({
         [specialtyApi.reducerPath]: specialtyApi.reducer,
         [branchApi.reducerPath]: branchApi.reducer,
         [appointmentApi.reducerPath]: appointmentApi.reducer,
+        [beneficiaryApi.reducerPath]: beneficiaryApi.reducer,
     },
     preloadedState: persistedStore,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware()
@@ -50,7 +52,8 @@ const store = configureStore({
         .concat(userApi.middleware)
         .concat(specialtyApi.middleware)
         .concat(branchApi.middleware)
-        .concat(appointmentApi.middleware),
+        .concat(appointmentApi.middleware)
+        .concat(beneficiaryApi.middleware),
 })
 
 setupListeners(store.dispatch)
