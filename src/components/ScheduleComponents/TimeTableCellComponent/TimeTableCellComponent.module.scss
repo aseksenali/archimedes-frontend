@@ -1,0 +1,65 @@
+.cell {
+  position: relative;
+  padding: 0;
+  box-sizing: border-box;
+  border-right: 1px solid #80B0BE;
+  border-bottom: 1px solid #80B0BE;
+
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  tr:last-child & {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: rgba(73, 140, 159, .21);
+  }
+
+  &:focus {
+    background-color: var(--primary-color);
+    outline: 0;
+  }
+
+  &.shadedCell:not(.notWorkingHours) {
+    background-color: rgba(128, 176, 190, .21);
+  }
+
+  &.notWorkingHours {
+    background-color: rgba(246, 118, 118, .21);
+  }
+
+  & .shadedPart {
+    background-color: rgba(128, 176, 190, .21);
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+
+    &.notWorkingHours {
+      background-color: rgba(246, 118, 118, 0);
+    }
+
+    &:not(.notWorkingHours):hover {
+      background-color: rgba(73, 140, 159, .21);
+    }
+
+    td:focus & {
+      opacity: 0;
+    }
+  }
+
+  &.brightRightBorder {
+    border-right: 1px solid #80B0BE;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+
+  &.brightBorderBottom {
+    border-bottom: 1px solid #80B0BE;
+  }
+}

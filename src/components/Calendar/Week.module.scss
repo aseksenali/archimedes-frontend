@@ -1,0 +1,12 @@
+.week {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0);
+
+  &.selected {
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+  }
+}

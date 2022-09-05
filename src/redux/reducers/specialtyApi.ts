@@ -1,9 +1,10 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
+import { backendUrl } from '../constants/backendConstants'
 
 export const specialtyApi = createApi({
     reducerPath: 'specialtyApi',
     tagTypes: [ 'Specialty' ],
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3304' }),
+    baseQuery: fetchBaseQuery({ baseUrl: backendUrl }),
     endpoints: builder => ({
         getSpecialties: builder.query<Array<{ specialtyId: string, specialtyName: string }>, void>({
             query: () => 'specialties',

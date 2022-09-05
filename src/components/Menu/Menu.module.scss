@@ -1,0 +1,8 @@
+.wrapper {
+  display: flex;
+  width: 240px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  overflow-y: auto;
+  justify-content: flex-start;
+}

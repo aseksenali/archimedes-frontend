@@ -1,0 +1,23 @@
+.wrapper {
+  color: white;
+  padding: .5em 1em 1em 1em;
+}
+
+.month {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  row-gap: 4px;
+}
+
+.week_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.week_day {
+  display: inline-flex;
+  justify-content: center;
+  align-items: flex-start;
+}

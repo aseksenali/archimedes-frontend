@@ -1,40 +1,10 @@
 import React, { useMemo, useRef, useState } from 'react'
-import { WeekPickerDayProps, WeekPickerProps, WeekPickerWeekProps } from './types'
-import * as styled from './styles'
+import { WeekPickerProps } from './types'
 import { WeekPickerWrapper } from './styles'
-import Calendar from '../Calendar/Calendar'
-import clsx from 'clsx'
+import Calendar from '../Calendar'
 import { DateInput } from '../DateRangePicker/styles'
-import Dropdown from '../Dropdown/Dropdown'
+import Dropdown from '../Dropdown'
 import { DateTime, Interval } from 'luxon'
-
-const Day = ({ day, selectedDate, currentMonth, onClick }: WeekPickerDayProps) => {
-    return (
-        <styled.Day className={ clsx({
-            'selected': +day === +selectedDate,
-            'first': +day === +(selectedDate.startOf('week')),
-            'last': +day === +(selectedDate.endOf('week').startOf('day')),
-            'different_month': day.month !== currentMonth,
-            'today': +day === +DateTime.utc().startOf('day'),
-        }) } onClick={ onClick }>
-            { day.day }
-        </styled.Day>
-    )
-}
-
-const Week = ({ weekDays, selectedDate, currentMonth, onDayClick }: WeekPickerWeekProps) => {
-    return (
-        <styled.Week className={ clsx({
-            'selected': weekDays.contains(selectedDate),
-        }) }>
-            { weekDays.splitBy({ day: 1 }).map(value => value.start.startOf('day')).map(day => {
-                return <Day key={ day.toMillis() } day={ day } selectedDate={ selectedDate }
-                            currentMonth={ currentMonth }
-                            onClick={ onDayClick(day) }/>
-            }) }
-        </styled.Week>
-    )
-}
 
 const WeekPicker = (props: WeekPickerProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -81,4 +51,3 @@ const WeekPicker = (props: WeekPickerProps) => {
 }
 
 export default WeekPicker
-export { Week }

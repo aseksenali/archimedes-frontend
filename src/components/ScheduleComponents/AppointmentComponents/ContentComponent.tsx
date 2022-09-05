@@ -7,9 +7,8 @@ import { FormatterFn, SchedulerDateTime } from '@devexpress/dx-react-scheduler'
 import moment from 'moment'
 import { AppointmentTooltip } from '@devexpress/dx-react-scheduler-material-ui'
 import styled from 'styled-components'
-import { ReactComponent as CalendarIcon } from '../../../assets/icons/schedule.svg'
-import { ReactComponent as InfoIcon } from '../../../assets/icons/info.svg'
 import '../../../helpers/stringHelper'
+import { Icon } from '../../icons'
 
 const WEEKDAY_INTERVAL = 'weekdayInterval'
 const LONG_WEEK_DAY_OPTIONS = { weekday: 'long' }
@@ -67,11 +66,12 @@ const StyledDiv = styled.div`
   & .text {
     color: var(--primary-color);
     display: inline-block;
+    font-size: .9em;
   }
 
   & .title {
     color: var(--primary-color);
-    font-size: 1.5em;
+    font-size: 1.3em;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -161,7 +161,7 @@ const ContentComponent = ({
                 </div>
                 <DateText>
                     <div className={ classNames([ 'text', 'dateAndTitle' ]) }>
-                        <CalendarIcon style={ {
+                        <Icon icon={ 'schedule' } style={ {
                             width: '1.3em',
                             height: '1.3em',
                             fill: 'var(--primary-color)',
@@ -181,7 +181,7 @@ const ContentComponent = ({
                     </div>
                 </DateText>
                 <PatientInfoText>
-                    <InfoIcon style={ {
+                    <Icon icon={ 'info' } style={ {
                         width: '1.3em',
                         height: '1.3em',
                         fill: 'var(--primary-color)',

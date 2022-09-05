@@ -14,10 +14,6 @@
     "@devexpress/dx-react-scheduler-material-ui": "^3.0.4",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
-    "@fortawesome/fontawesome-svg-core": "^6.1.2",
-    "@fortawesome/free-regular-svg-icons": "^6.1.2",
-    "@fortawesome/free-solid-svg-icons": "^6.1.2",
-    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/material": "^5.8.0",
     "@mui/styled-engine-sc": "^5.8.0",
     "@react-hook/resize-observer": "^1.2.5",
@@ -40,6 +36,7 @@
     "devextreme-react": "22.1.4",
     "jwt-decode": "^3.1.2",
     "luxon": "^3.0.1",
+    "next": "^12.2.5",
     "react": "18.1.0",
     "react-devtools": "^4.24.6",
     "react-dom": "18.1.0",
@@ -50,17 +47,15 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "redux": "^4.2.0",
-    "sass": "^1.52.1",
     "styled-components": "^5.3.5",
     "typescript": "4.7.2",
-    "uuid": "^8.3.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "eslintConfig": {
     "extends": [
@@ -84,6 +79,9 @@
     "@devexpress/dx-grid-core": "^3.0.4",
     "@devexpress/dx-scheduler-core": "^3.0.4",
     "@svgr/webpack": "^6.3.1",
-    "@types/lodash": "^4.14.184"
+    "@types/lodash": "^4.14.184",
+    "@types/react-input-mask": "^3.0.1",
+    "postcss-reporter": "^7.0.5",
+    "sass": "^1.54.8"
   }
 }

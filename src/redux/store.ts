@@ -17,15 +17,19 @@ const saveToLocalStorage = (name: string, state: UserStoreState) => {
     }
 }
 
+const IS_SERVER = typeof window === 'undefined'
+
 const loadFromLocalStorage = () => {
     try {
-        const stateStr = [ { name: 'user', item: localStorage.getItem('user') } ]
-        const objects = stateStr.map(str => ({ name: str.name, item: str.item ? JSON.parse(str.item) : undefined }))
-        return objects
-            .reduce((previousValue, currentValue) => ({
-                ...previousValue,
-                [currentValue.name]: currentValue.item,
-            }), {})
+        if (!IS_SERVER) {
+            const stateStr = [ { name: 'user', item: localStorage.getItem('user') } ]
+            const objects = stateStr.map(str => ({ name: str.name, item: str.item ? JSON.parse(str.item) : undefined }))
+            return objects
+                .reduce((previousValue, currentValue) => ({
+                    ...previousValue,
+                    [currentValue.name]: currentValue.item,
+                }), {})
+        }
     } catch (e) {
         console.error(e)
         return undefined
@@ -46,7 +50,7 @@ const store = configureStore({
         [beneficiaryApi.reducerPath]: beneficiaryApi.reducer,
     },
     preloadedState: persistedStore,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })
         .concat(scheduleApi.middleware)
         .concat(medicApi.middleware)
         .concat(userApi.middleware)

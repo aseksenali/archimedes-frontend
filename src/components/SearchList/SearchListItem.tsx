@@ -1,43 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
-import Checkbox from '../Checkbox/Checkbox'
-import { SVG } from '../Checkbox/styles'
-
-type SearchListItemProps = {
-    value: string
-} & ({
-    multipleSelect: true
-    isSelected: boolean
-    onItemSelect: (item: string) => void
-    onItemDeselect: (item: string) => void
-} | {
-    multipleSelect: false
-    onItemClick: (item: string) => void
-    closeDropdown: () => void
-})
-
-const SearchListItemWrapper = styled.div`
-  &:not(:last-of-type) {
-    border-bottom: 1px solid white;
-  }
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: start;
-  padding: .3em .5em;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #0f86a8;
-
-    & ${ SVG } {
-      stroke: #0f86a8 !important;
-    }
-  }
-
-  user-select: none;
-`
+import Checkbox from '../Checkbox'
+import { SearchListItemProps } from './types'
+import styles from './SearchListItem.module.scss'
 
 const SearchListItem = (props: SearchListItemProps) => {
     const onClick = () => {
@@ -50,18 +14,11 @@ const SearchListItem = (props: SearchListItemProps) => {
         }
     }
 
-    if (props.multipleSelect)
-        return (
-            <SearchListItemWrapper onClick={ onClick }>
-                <Checkbox label={ props.value } checked={ props.isSelected }/>
-            </SearchListItemWrapper>
-        )
-    else
-        return (
-            <SearchListItemWrapper onClick={ onClick }>
-                { props.value }
-            </SearchListItemWrapper>
-        )
+    return (
+        <div className={ styles.wrapper } onClick={ onClick }>
+            { props.multipleSelect ? <Checkbox label={ props.value } checked={ props.isSelected }/> : props.value }
+        </div>
+    )
 }
 
 export default SearchListItem

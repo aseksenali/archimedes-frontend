@@ -1,0 +1,30 @@
+.day {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  width: 1.5em;
+  height: 1.5em;
+  margin: .1em;
+  border-radius: 4px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #80b0be;
+    color: #00607c;
+  }
+
+  &.selected {
+    background-color: white !important;
+    color: #00607c !important;
+    font-weight: bold !important;
+  }
+
+  &.today {
+    font-weight: bold;
+  }
+
+  &.different_month {
+    color: #ccc;
+  }
+}

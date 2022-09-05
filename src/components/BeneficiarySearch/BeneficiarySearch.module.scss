@@ -1,0 +1,59 @@
+.search_wrapper {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  font-size: 1.5em;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 1.5em;
+  width: 80%;
+
+  & > p {
+    margin: 0;
+  }
+}
+
+.top_badge {
+  display: flex;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 1em;
+  height: 53px;
+}
+
+.search {
+  margin-left: 1em;
+  background: none;
+  border: none;
+  color: white;
+  width: 100%;
+  border-bottom: 1px solid white;
+  outline: none;
+}
+
+.date_wrapper {
+  font-size: 1.5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & > p {
+    margin: 0;
+  }
+}
+
+.icon {
+  fill: white;
+  position: relative;
+  right: 1.2em;
+  width: 1em;
+  height: 1em;
+  margin: .3em;
+}
+
+.input_with_icon {
+  position: relative;
+  width: 60%;
+  flex-wrap: nowrap;
+  display: flex;
+}

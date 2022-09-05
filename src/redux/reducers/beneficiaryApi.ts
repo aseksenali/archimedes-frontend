@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
+import { backendUrl } from '../constants/backendConstants'
 
 export type BeneficiaryData = {
     beneficiaryId: string,
@@ -9,7 +10,7 @@ export type BeneficiaryData = {
 export const beneficiaryApi = createApi({
     reducerPath: 'beneficiaryApi',
     tagTypes: [ 'BeneficiaryData' ],
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3304' }),
+    baseQuery: fetchBaseQuery({ baseUrl: backendUrl }),
     endpoints: builder => ({
         getBeneficiaries: builder.query<Array<BeneficiaryData>, void>({
             query: () => 'beneficiaries',

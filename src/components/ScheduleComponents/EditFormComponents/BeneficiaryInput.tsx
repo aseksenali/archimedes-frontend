@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { TextDropdownInputProps } from './types'
 import * as styled from './styles'
-import Dropdown from '../../Dropdown/Dropdown'
+import Dropdown from '../../Dropdown'
 import SearchList from './SearchList'
 
 const BeneficiaryInput = (props: TextDropdownInputProps) => {
@@ -27,7 +27,7 @@ const BeneficiaryInput = (props: TextDropdownInputProps) => {
                                       onClick={ () => isOpen ? setOpen(false) : openDropdown() }
                                       value={ props.value ? props.value.beneficiaryId : '' } ref={ props.inputRef }
                                       placeholder={ props.placeholder } readOnly/>
-                    <styled.Icon open={ isOpen }/>
+                    <styled.StyledIcon icon={ 'arrowLeft' } open={ isOpen }/>
                 </styled.TextInputWrapper>
                 <Dropdown isOpen={ isOpen } closeDropdown={ () => setOpen(false) } handleMouseClick={ handleMouseClick }
                           ref={ dropdownRef } style={ {

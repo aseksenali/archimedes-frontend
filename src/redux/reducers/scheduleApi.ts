@@ -1,10 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
 import { MedicSchedule } from '../../interfaces/MedicSchedule'
+import { backendUrl } from '../constants/backendConstants'
 
 export const scheduleApi = createApi({
     reducerPath: 'scheduleApi',
     tagTypes: [ 'Schedule' ],
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3304' }),
+    baseQuery: fetchBaseQuery({ baseUrl: backendUrl }),
     endpoints: builder => ({
         getAllSchedulesBySpecialtyId: builder.query<Array<MedicSchedule>, string>({
             query: (specialtyId) => `schedules?specialtyIds_like=${ specialtyId }`,

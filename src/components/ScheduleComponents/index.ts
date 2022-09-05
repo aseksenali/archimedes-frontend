@@ -1,5 +1,0 @@
-export { default as RootComponent } from './RootComponent'
-export { default as TimeTableCellComponent } from './TimeTableCellComponent'
-export { default as DayScaleCellComponent } from './DayScaleCellComponent'
-export { default as AppointmentLayerComponent } from './AppointmentLayerComponent'
-export { default as DayScaleEmptyCellComponent } from './DayScaleEmptyCellComponent'

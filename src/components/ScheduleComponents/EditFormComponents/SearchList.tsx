@@ -1,10 +1,9 @@
 import { SearchListProps } from './types'
 import React, { useCallback, useMemo, useState } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import SearchListItem from './SearchListItem'
 import * as styled from './styles'
 import { BeneficiaryData } from '../../../redux/reducers/beneficiaryApi'
+import { Icon } from '../../icons'
 
 const filter = (query: string, items: Array<BeneficiaryData>): Array<BeneficiaryData> => {
     // prepare query
@@ -58,8 +57,14 @@ const SearchList = (props: SearchListProps) => {
                 <styled.InputWithIcon>
                     <styled.SearchInput type={ 'text' } value={ query } onChange={ (e) => setQuery(e.target.value) }
                                         ref={ inputRef }/>
-                    <FontAwesomeIcon icon={ faSearch }
-                                     style={ { position: 'absolute', color: 'var(--primary-color)', right: '.5em' } }/>
+                    <Icon icon={ 'search' }
+                          style={ {
+                              position: 'absolute',
+                              fill: 'var(--primary-color)',
+                              right: '.5em',
+                              width: '1em',
+                              height: '1em',
+                          } }/>
                 </styled.InputWithIcon>
             }
             <styled.SearchListItemsWrapper hasInput={ props.items.length > 6 }>

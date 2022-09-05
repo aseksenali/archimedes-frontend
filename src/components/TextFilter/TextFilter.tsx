@@ -1,8 +1,9 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { TextFilterProps } from './types'
-import Dropdown from '../Dropdown/Dropdown'
-import * as styled from './styles'
-import SearchList from '../SearchList/SearchList'
+import Dropdown from '../Dropdown'
+import SearchList from '../SearchList'
+import styled from './TextFilter.module.scss'
+import { Icon } from '../icons'
 
 const TextFilter = (props: TextFilterProps) => {
     const { inputRef } = props
@@ -36,15 +37,18 @@ const TextFilter = (props: TextFilterProps) => {
     }, [ props.multipleSelect, props.value ])
 
     return (
-        <styled.TextFilterWrapper widthSize={ props.width }>
+        <div className={ styled.wrapper } style={ { width: `${ props.width }%` } }>
             <label>{ props.label }</label>
-            <styled.TextInputWrapper>
-                <styled.TextInput type={ 'text' }
-                                  onClick={ () => isOpen ? setOpen(false) : openDropdown() }
-                                  value={ inputValue ? inputValue : '' } ref={ inputRef }
-                                  placeholder={ props.placeholder } readOnly/>
-                <styled.Icon open={ isOpen }/>
-            </styled.TextInputWrapper>
+            <div className={ styled.input_wrapper }>
+                <input className={ styled.text } type={ 'text' }
+                       onClick={ () => isOpen ? setOpen(false) : openDropdown() }
+                       value={ inputValue ? inputValue : '' } ref={ inputRef }
+                       placeholder={ props.placeholder } readOnly/>
+                <Icon icon={ 'arrowLeft' } className={ styled.arrow_icon } style={ {
+                    transform: isOpen ? 'rotateZ(90deg)' : 'rotateZ(-90deg)',
+                    top: isOpen ? '.2em' : '.25em',
+                } }/>
+            </div>
             <Dropdown isOpen={ isOpen } closeDropdown={ () => setOpen(false) } handleMouseClick={ handleMouseClick }
                       ref={ dropdownRef } style={ {
                 backgroundColor: 'var(--primary-color)',
@@ -60,7 +64,7 @@ const TextFilter = (props: TextFilterProps) => {
                                   onItemClick={ props.onChange } closeDropdown={ () => setOpen(false) }/>
                 }
             </Dropdown>
-        </styled.TextFilterWrapper>
+        </div>
     )
 }
 

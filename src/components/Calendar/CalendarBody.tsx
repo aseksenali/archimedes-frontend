@@ -1,39 +1,37 @@
 import { CalendarSelectorBodyProps } from './types'
-import { Day as DateRangePickerDay } from '../DateRangePicker/DateRangePicker'
-import { Week } from '../WeekPicker/WeekPicker'
+import Day from '../DateRangePicker/Day'
 import React, { useMemo } from 'react'
-import * as styled from './styles'
 import { Interval } from 'luxon'
+import { weekDays } from '../../constants/dateConstants'
+import Week from './Week'
+import styles from './CalendarBody.module.scss'
 
 const CalendarBody = (props: CalendarSelectorBodyProps) => {
-    const weekDays = [ 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс' ]
-
-    const visibleDays = useMemo(() => Interval.fromDateTimes(props.monthAndYear.startOf('month').startOf('week'),
-            props.monthAndYear.endOf('month').endOf('week')),
-        [ props.monthAndYear ],
-    )
+    const visibleWeeks = useMemo(() => Interval.fromDateTimes(props.monthAndYear.startOf('month').startOf('week'),
+            props.monthAndYear.endOf('month').endOf('week')).splitBy({ week: 1 }),
+        [ props.monthAndYear ])
 
     return (
-        <styled.CalendarWrapper>
-            <styled.WeekHeader>
+        <div className={ styles.wrapper }>
+            <div className={ styles.week_header }>
                 { weekDays.map(value => (
-                    <styled.WeekDay key={ value }>{ value }</styled.WeekDay>
+                    <div className={ styles.week_day } key={ value }>{ value }</div>
                 )) }
-            </styled.WeekHeader>
-            <styled.Month>
-                { visibleDays.splitBy({ week: 1 }).map((week) => {
+            </div>
+            <div className={ styles.month }>
+                { visibleWeeks.map((week) => {
                     return (() => {
                         switch (props.type) {
                             case 'dateRange':
                                 return (
                                     week.splitBy({ day: 1 }).map(value => {
                                         const day = value.start.startOf('day')
-                                        return <DateRangePickerDay key={ day.toMillis() }
-                                                                   day={ day }
-                                                                   startDate={ props.startDate }
-                                                                   endDate={ props.endDate }
-                                                                   onClick={ props.onClick(day) }
-                                                                   currentMonth={ props.monthAndYear.month }/>
+                                        return <Day key={ day.toMillis() }
+                                                    day={ day }
+                                                    startDate={ props.startDate }
+                                                    endDate={ props.endDate }
+                                                    onClick={ props.onClick(day) }
+                                                    currentMonth={ props.monthAndYear.month }/>
                                     })
                                 )
                             case 'week':
@@ -47,8 +45,8 @@ const CalendarBody = (props: CalendarSelectorBodyProps) => {
                         }
                     })()
                 }) }
-            </styled.Month>
-        </styled.CalendarWrapper>
+            </div>
+        </div>
     )
 }
 

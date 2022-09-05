@@ -1,0 +1,27 @@
+.header {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: var(--primary-color);
+  padding: 0 1em;
+  height: calc(5% + 1.4em);
+  font-size: 1.5em;
+  column-gap: .5em;
+
+  & > svg {
+    cursor: pointer;
+  }
+}
+
+.back_icon {
+  width: 1em;
+  height: 100%;
+  fill: var(--primary-color);
+}
+
+.edit_icon {
+  fill: var(--primary-color);
+  width: 1em;
+  height: 100%;
+}

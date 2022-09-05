@@ -1,0 +1,33 @@
+.month {
+  display: inline-flex;
+  min-width: 10em;
+  color: white;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.year {
+  display: inline-flex;
+  color: white;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid white;
+  padding: .5em;
+
+  & i {
+    color: white;
+  }
+}
+
+.navigation_button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: white;
+}

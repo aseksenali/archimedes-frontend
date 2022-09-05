@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { ReactComponent as AngleDown } from '../../../assets/icons/arrowLeft.svg'
+import { Icon } from '../../icons'
 
 export const TextFilterWrapper = styled.div`
   display: inline-flex;
@@ -44,7 +44,7 @@ export const TextInput = styled.input`
   }
 `
 
-export const Icon = styled(AngleDown)<{ open: boolean }>`
+export const StyledIcon = styled(Icon)<{ open: boolean }>`
   position: relative;
   right: 1.5em;
   pointer-events: none;

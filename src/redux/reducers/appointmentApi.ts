@@ -1,21 +1,23 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react'
-import { AppointmentModel } from '@devexpress/dx-react-scheduler'
 import { DateTime } from 'luxon'
 import { AppointmentData } from '../interfaces/types'
+import { AppointmentModel } from '@devexpress/dx-react-scheduler'
+import { backendUrl } from '../constants/backendConstants'
+import '../../helpers/dateHelper'
 
 export const appointmentApi = createApi({
     reducerPath: 'appointmentApi',
     tagTypes: [ 'Appointment' ],
-    baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3304' }),
+    baseQuery: fetchBaseQuery({ baseUrl: backendUrl }),
     endpoints: builder => ({
         getAppointmentsBySpecialtyId: builder.query<Array<AppointmentData>, { startDate: number, endDate: number, specialtyId: string }>({
             query: ({
                         startDate,
                         endDate,
                         specialtyId,
-                    }) => `appointments?startDate_gte=${ startDate }&endDate_lte=${ endDate }&specialtyIds_like=${ specialtyId }`,
-            transformResponse: (response: Array<AppointmentData>) => {
-                return response.map(appointment => ({
+                    }) => `appointmentsBySpecialty/${ specialtyId }?startDate_gte=${ startDate }&endDate_lte=${ endDate }`,
+            transformResponse: (response: { id: string, appointments: Array<AppointmentData> }) => {
+                return response.appointments.map(appointment => ({
                     ...appointment,
                     startDate: DateTime.fromMillis(appointment.startDate as number).convertFromUTC().toISO(),
                     endDate: DateTime.fromMillis(appointment.endDate as number).convertFromUTC().toISO(),
@@ -49,6 +51,6 @@ export const appointmentApi = createApi({
     }),
 })
 
-export const { useLazyGetAppointmentsByMedicIdQuery, useLazyGetAppointmentsBySpecialtyIdQuery } = appointmentApi
+export const { useLazyGetAppointmentsBySpecialtyIdQuery, useLazyGetAppointmentsByMedicIdQuery } = appointmentApi
 
 export default appointmentApi.reducer

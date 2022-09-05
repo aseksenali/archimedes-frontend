@@ -3,7 +3,7 @@ import { useCallback, useContext, useMemo, useRef } from 'react'
 import classNames from 'clsx'
 import { AppointmentForm } from '@devexpress/dx-react-scheduler-material-ui'
 import * as styled from './styles'
-import { BeneficiariesContext } from '../../../pages/Schedule/ScheduleDetails/ScheduleDetails'
+import { BeneficiariesContext } from '../../../pages/schedule/[medicId]'
 import BeneficiaryInput from './BeneficiaryInput'
 import { BeneficiaryData } from '../../../redux/reducers/beneficiaryApi'
 import '../../../helpers/stringHelper'
@@ -19,15 +19,11 @@ const FormLayoutComponent = ({
     const changeTitle = useCallback(title => onFieldChange({ title }), [ onFieldChange ])
     const changeComment = useCallback(comment => onFieldChange({ comment }), [ onFieldChange ])
     const changeBeneficiary = useCallback(beneficiary => onFieldChange({ beneficiary }), [ onFieldChange ])
-    const changeStartDate = useCallback(
-        startDate => onFieldChange({ startDate }), [ onFieldChange ],
-    )
-    const changeEndDate = useCallback(endDate => onFieldChange({ endDate }), [ onFieldChange ])
     const beneficiaries = useContext<Array<BeneficiaryData> | undefined>(BeneficiariesContext)
     const inputRef = useRef<HTMLInputElement | null>(null)
 
     const startTime = useMemo(() => DateTime.fromJSDate(appointmentData.startDate as Date).toFormat('HH:mm'), [ appointmentData.startDate ])
-    const endTime = useMemo(() => DateTime.fromJSDate(appointmentData.endDate as Date).toFormat('HH:mm'), [ appointmentData.startDate ])
+    const endTime = useMemo(() => DateTime.fromJSDate(appointmentData.endDate as Date).toFormat('HH:mm'), [ appointmentData.endDate ])
 
     return (
         <styled.StyledDiv

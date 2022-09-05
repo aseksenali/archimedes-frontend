@@ -1,0 +1,22 @@
+.wrapper {
+  &:not(:last-of-type) {
+    border-bottom: 1px solid white;
+  }
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: .3em .5em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0f86a8;
+
+    & svg {
+      stroke: #0f86a8 !important;
+    }
+  }
+
+  user-select: none;
+}

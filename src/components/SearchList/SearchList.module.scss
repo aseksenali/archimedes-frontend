@@ -1,0 +1,24 @@
+.wrapper {
+  color: white;
+}
+
+.search_input {
+  width: 100%;
+  outline: none;
+  border: none;
+  color: var(--primary-color);
+}
+
+.input_with_icon {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  width: content-box;
+  justify-content: center;
+  align-items: center;
+}
+
+.items_wrapper {
+  max-height: 12em;
+  overflow-y: auto;
+}

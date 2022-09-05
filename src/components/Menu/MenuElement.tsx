@@ -1,67 +1,28 @@
-import React, { SVGProps, VFC } from 'react'
-import styled from 'styled-components'
-import { MenuElementProps } from './types'
+import React, { forwardRef } from 'react'
+import styles from './MenuElement.module.scss'
+import { IconWithTextProps, MenuElementProps } from './types'
 import clsx from 'clsx'
+import { Icon } from '../icons'
 
-type IconWithTextProps = {
-    gap: number
-    icon: VFC<SVGProps<SVGSVGElement>>,
-    text: string
-}
-
-const IconWithTextWrapper = styled.div<{ gap: number }>`
-  display: grid;
-  grid-template-columns: auto auto;
-  column-gap: ${ props => `${ props.gap }em` };
-  flex-direction: row;
-`
-
-const MenuElementWrapper = styled.div`
-  padding: 0 1em;
-  height: 53px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  white-space: nowrap;
-  border-bottom: 1px solid #aaa;
-  color: var(--primary-color);
-
-  &.selected {
-    background-color: var(--primary-color);
-    color: white;
-    & svg {
-      fill: white;
-    }
-  }
-  
-  &:not(.selected) {
-    & svg {
-      fill: var(--primary-color);
-    }
-    &:hover {
-      background-color: #EDF5F8;
-    }
-  }
-`
-
-const IconWithText = ({ icon: Icon, ...props }: IconWithTextProps) => {
+const IconWithText = ({ icon, ...props }: IconWithTextProps) => {
     return (
-        <IconWithTextWrapper gap={ props.gap }>
-            <Icon style={ {
+        <div className={ clsx(styles.icon_with_text, styles.wrapper, props.className) }>
+            <Icon icon={ icon } style={ {
                 width: '1.3em',
                 height: '1.3em',
             } }/>
             <span>{ props.text }</span>
-        </IconWithTextWrapper>
+        </div>
     )
 }
 
-const MenuElement = (props: MenuElementProps) => {
+const MenuElement = forwardRef((props: MenuElementProps, ref) => {
     return (
-        <MenuElementWrapper onClick={ props.onSelectionChanged } className={ clsx({ 'selected': props.selected }) }>
-            <IconWithText gap={ 1 } text={ props.text } icon={ props.icon }/>
-        </MenuElementWrapper>
+        <a href={ props.href } onClick={ props.onClick } style={ { textDecoration: 'none' } }>
+            <IconWithText className={ clsx({ [styles.selected]: props.selected }) } text={ props.text }
+                          icon={ props.icon }/>
+        </a>
     )
-}
+})
 
 export default MenuElement

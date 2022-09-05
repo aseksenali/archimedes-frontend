@@ -1,20 +1,24 @@
 import React from 'react'
 import { MenuProps } from './types'
-import { MenuWrapper } from './styles'
+import styles from './Menu.module.scss'
 import MenuElement from './MenuElement'
-import { useLocation } from 'react-router'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 const Menu = (props: MenuProps) => {
-    const location = useLocation()
+    const router = useRouter()
+    const location = router.pathname
 
     return (
-        <MenuWrapper openWidth={ props.width }>
+        <div className={ styles.wrapper }>
             {
-                props.items.map(item => <MenuElement onSelectionChanged={ () => props.onSelectionChanged(item) }
-                                                     key={ item.text }
-                                                     selected={ location.pathname.startsWith(item.path) } { ...item }/>)
+                props.items.map(item => (
+                    <Link key={ item.text } href={ item.path } passHref>
+                        <MenuElement selected={ location.startsWith(item.path) } { ...item }/>
+                    </Link>
+                ))
             }
-        </MenuWrapper>
+        </div>
     )
 }
 

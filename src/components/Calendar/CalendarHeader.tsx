@@ -1,9 +1,8 @@
 import { CalendarSelectorHeaderProps } from './types'
 import React from 'react'
-import * as styled from './styles'
-import { ReactComponent as AngleDown } from '../../assets/icons/arrowLeft.svg'
-
-const capitalize = (str: string): string => str.substring(0, 1).toUpperCase().concat(str.substring(1).toLowerCase())
+import '../../helpers/stringHelper'
+import { Icon } from '../icons'
+import styles from './CalendarHeader.module.scss'
 
 const CalendarHeader = ({ monthAndYear, setMonthAndYear }: CalendarSelectorHeaderProps) => {
     const onPrevMonthClick = () =>
@@ -19,15 +18,15 @@ const CalendarHeader = ({ monthAndYear, setMonthAndYear }: CalendarSelectorHeade
         setMonthAndYear(monthAndYear.plus({ year: 1 }))
 
     return (
-        <styled.HeaderWrapper>
-            <styled.MonthWrapper>
-                <styled.NavigationButton onClick={ onPrevMonthClick }>
-                    <AngleDown
-                        style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
-                </styled.NavigationButton>
-                <span>{ capitalize(monthAndYear.toFormat('LLLL')) }</span>
-                <styled.NavigationButton onClick={ onNextMonthClick }>
-                    <AngleDown style={ {
+        <div className={ styles.wrapper }>
+            <div className={ styles.month }>
+                <button className={ styles.navigation_button } onClick={ onPrevMonthClick }>
+                    <Icon icon={ 'arrowLeft' }
+                          style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
+                </button>
+                <span>{ monthAndYear.toFormat('LLLL').capitalize() }</span>
+                <button className={ styles.navigation_button } onClick={ onNextMonthClick }>
+                    <Icon icon={ 'arrowLeft' } style={ {
                         width: '1em',
                         height: '1em',
                         position: 'relative',
@@ -35,16 +34,16 @@ const CalendarHeader = ({ monthAndYear, setMonthAndYear }: CalendarSelectorHeade
                         fill: 'white',
                         transform: 'rotateZ(180deg)',
                     } }/>
-                </styled.NavigationButton>
-            </styled.MonthWrapper>
-            <styled.YearWrapper>
-                <styled.NavigationButton onClick={ onPrevYearClick }>
-                    <AngleDown
-                        style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
-                </styled.NavigationButton>
+                </button>
+            </div>
+            <div className={ styles.year }>
+                <button className={ styles.navigation_button } onClick={ onPrevYearClick }>
+                    <Icon icon={ 'arrowLeft' }
+                          style={ { width: '1em', height: '1em', position: 'relative', top: '.2em', fill: 'white' } }/>
+                </button>
                 <span>{ monthAndYear.toFormat('yyyy') }</span>
-                <styled.NavigationButton onClick={ onNextYearClick }>
-                    <AngleDown style={ {
+                <button className={ styles.navigation_button } onClick={ onNextYearClick }>
+                    <Icon icon={ 'arrowLeft' } style={ {
                         width: '1em',
                         height: '1em',
                         position: 'relative',
@@ -52,9 +51,9 @@ const CalendarHeader = ({ monthAndYear, setMonthAndYear }: CalendarSelectorHeade
                         fill: 'white',
                         transform: 'rotateZ(180deg)',
                     } }/>
-                </styled.NavigationButton>
-            </styled.YearWrapper>
-        </styled.HeaderWrapper>
+                </button>
+            </div>
+        </div>
     )
 }
 
